@@ -16,12 +16,10 @@ namespace Oware
         public class UTMResult
         {
             public double Easting { get; set; }
-            public double UTMEasting { get; set; }
             public double Northing { get; set; }
-            public double UTMNorthing { get; set; }
             public int ZoneNumber { get; set; }
             public string ZoneLetter { get; set; }
-            public string Zona
+            public string Zone
             {
                 get
                 {
@@ -40,7 +38,7 @@ namespace Oware
         private bool status;
         private string datumName = "WGS 84";
 
-        public LatLngUTMConverter(string datumNameIn)
+        public LatLngUTMConverter(string datumNameIn = "")
         {
             if (!string.IsNullOrEmpty(datumNameIn))
             {
