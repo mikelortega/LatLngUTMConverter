@@ -50,6 +50,46 @@ namespace Oware
             this.setEllipsoid(datumName);
         }
 
+        public int getUtmZoneNumber(double latitude, double longitude)
+        {
+            int ZoneNumber;
+
+            if (longitude >= 8 && longitude <= 13 && latitude > 54.5 && latitude < 58)
+            {
+                ZoneNumber = 32;
+            }
+            else if (latitude >= 56.0 && latitude < 64.0 && longitude >= 3.0 && longitude < 12.0)
+            {
+                ZoneNumber = 32;
+            }
+            else
+            {
+                ZoneNumber = (int)((longitude + 180) / 6) + 1;
+
+                if (latitude >= 72.0 && latitude < 84.0)
+                {
+                    if (longitude >= 0.0 && longitude < 9.0)
+                    {
+                        ZoneNumber = 31;
+                    }
+                    else if (longitude >= 9.0 && longitude < 21.0)
+                    {
+                        ZoneNumber = 33;
+                    }
+                    else if (longitude >= 21.0 && longitude < 33.0)
+                    {
+                        ZoneNumber = 35;
+                    }
+                    else if (longitude >= 33.0 && longitude < 42.0)
+                    {
+                        ZoneNumber = 37;
+                    }
+                }
+            }
+
+            return ZoneNumber;
+        }
+
         private string getUtmLetterDesignator(double latitude)
         {
             if ((84 >= latitude) && (latitude >= 72))
@@ -103,40 +143,7 @@ namespace Oware
                 throw new Exception("No ecclipsoid data associated with unknown datum: " + datumName);
             }
 
-            int ZoneNumber;
-
-            if (longitude >= 8 && longitude <= 13 && latitude > 54.5 && latitude < 58)
-            {
-                ZoneNumber = 32;
-            }
-            else if (latitude >= 56.0 && latitude < 64.0 && longitude >= 3.0 && longitude < 12.0)
-            {
-                ZoneNumber = 32;
-            }
-            else
-            {
-                ZoneNumber = (int) ((longitude + 180) / 6) + 1;
-
-                if (latitude >= 72.0 && latitude < 84.0)
-                {
-                    if (longitude >= 0.0 && longitude < 9.0)
-                    {
-                        ZoneNumber = 31;
-                    }
-                    else if (longitude >= 9.0 && longitude < 21.0)
-                    {
-                        ZoneNumber = 33;
-                    }
-                    else if (longitude >= 21.0 && longitude < 33.0)
-                    {
-                        ZoneNumber = 35;
-                    }
-                    else if (longitude >= 33.0 && longitude < 42.0)
-                    {
-                        ZoneNumber = 37;
-                    }
-                }
-            }
+            int ZoneNumber = getUtmZoneNumber(latitude, longitude);
 
             var LatRad = toRadians(latitude);
             var LongRad = toRadians(longitude);
