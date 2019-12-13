@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Oware
 {
@@ -23,8 +20,8 @@ namespace Oware
             public double Northing { get; set; }
             public double UTMNorthing { get; set; }
             public int ZoneNumber { get; set; }
-            public String ZoneLetter { get; set; }
-            public String Zona
+            public string ZoneLetter { get; set; }
+            public string Zona
             {
                 get
                 {
@@ -43,9 +40,9 @@ namespace Oware
         private bool status;
         private string datumName = "WGS 84";
 
-        public LatLngUTMConverter(String datumNameIn)
+        public LatLngUTMConverter(string datumNameIn)
         {
-            if (!String.IsNullOrEmpty(datumNameIn))
+            if (!string.IsNullOrEmpty(datumNameIn))
             {
                 datumName = datumNameIn;
             }
@@ -58,7 +55,7 @@ namespace Oware
             return grad * Math.PI / 180;
         }
 
-        private String getUtmLetterDesignator(double latitude)
+        private string getUtmLetterDesignator(double latitude)
         {
             if ((84 >= latitude) && (latitude >= 72))
                 return "X";
@@ -180,7 +177,7 @@ namespace Oware
             return new UTMResult { Easting= UTMEasting, Northing= UTMNorthing, ZoneNumber= ZoneNumber, ZoneLetter= UTMZone};
         }
 
-        private void setEllipsoid(String name)
+        private void setEllipsoid(string name)
         {
             switch (name)
             {
@@ -288,7 +285,7 @@ namespace Oware
             }
         }
 
-        public LatLng convertUtmToLatLng(double UTMEasting, double UTMNorthing, int UTMZoneNumber, String UTMZoneLetter)
+        public LatLng convertUtmToLatLng(double UTMEasting, double UTMNorthing, int UTMZoneNumber, string UTMZoneLetter)
         {
             var e1 = (1 - Math.Sqrt(1 - this.eccSquared)) / (1 + Math.Sqrt(1 - this.eccSquared));
             var x = UTMEasting - 500000.0; //remove 500,000 meter offset for longitude
