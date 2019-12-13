@@ -50,11 +50,6 @@ namespace Oware
             this.setEllipsoid(datumName);
         }
 
-        private double toRadians(double grad)
-        {
-            return grad * Math.PI / 180;
-        }
-
         private string getUtmLetterDesignator(double latitude)
         {
             if ((84 >= latitude) && (latitude >= 72))
@@ -110,42 +105,41 @@ namespace Oware
 
             int ZoneNumber;
 
-            var LongTemp = longitude;
-            var LatRad = toRadians(latitude);
-            var LongRad = toRadians(LongTemp);
-
-            if (LongTemp >= 8 && LongTemp <= 13 && latitude > 54.5 && latitude < 58)
+            if (longitude >= 8 && longitude <= 13 && latitude > 54.5 && latitude < 58)
             {
                 ZoneNumber = 32;
             }
-            else if (latitude >= 56.0 && latitude < 64.0 && LongTemp >= 3.0 && LongTemp < 12.0)
+            else if (latitude >= 56.0 && latitude < 64.0 && longitude >= 3.0 && longitude < 12.0)
             {
                 ZoneNumber = 32;
             }
             else
             {
-                ZoneNumber = (int) ((LongTemp + 180) / 6) + 1;
+                ZoneNumber = (int) ((longitude + 180) / 6) + 1;
 
                 if (latitude >= 72.0 && latitude < 84.0)
                 {
-                    if (LongTemp >= 0.0 && LongTemp < 9.0)
+                    if (longitude >= 0.0 && longitude < 9.0)
                     {
                         ZoneNumber = 31;
                     }
-                    else if (LongTemp >= 9.0 && LongTemp < 21.0)
+                    else if (longitude >= 9.0 && longitude < 21.0)
                     {
                         ZoneNumber = 33;
                     }
-                    else if (LongTemp >= 21.0 && LongTemp < 33.0)
+                    else if (longitude >= 21.0 && longitude < 33.0)
                     {
                         ZoneNumber = 35;
                     }
-                    else if (LongTemp >= 33.0 && LongTemp < 42.0)
+                    else if (longitude >= 33.0 && longitude < 42.0)
                     {
                         ZoneNumber = 37;
                     }
                 }
             }
+
+            var LatRad = toRadians(latitude);
+            var LongRad = toRadians(longitude);
 
             var LongOrigin = (ZoneNumber - 1) * 6 - 180 + 3;  //+3 puts origin in middle of zone
             var LongOriginRad = toRadians(LongOrigin);
@@ -332,8 +326,14 @@ namespace Oware
             return new LatLng { Lat = Lat, Lng = Long };
         }
 
-        private double toDegrees (double rad) {
-            return rad / Math.PI* 180;
+        private double toRadians(double grad)
+        {
+            return grad * Math.PI / 180.0;
+        }
+
+        private double toDegrees(double rad)
+        {
+            return rad * 180.0 / Math.PI;
         }
     }
 }
