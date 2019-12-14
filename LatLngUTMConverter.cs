@@ -340,5 +340,20 @@ namespace Oware
         {
             return rad * 180.0 / Math.PI;
         }
+
+        public double GridConvergence(double latitude, double longitude, int zone)
+        {
+            double ZoneLongitude = zone * 6 - 183; // Fixme: Special zones
+
+            double toRadians = Math.PI / 180.0;
+            double toDegrees = 180.0 / Math.PI;
+
+            latitude *= toRadians;
+            longitude *= toRadians;
+            ZoneLongitude *= toRadians;
+
+            return Math.Atan(Math.Tan(ZoneLongitude - longitude) * Math.Sin(latitude)) * toDegrees;
+        }
+
     }
 }
