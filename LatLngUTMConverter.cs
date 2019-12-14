@@ -2,9 +2,10 @@
 
 namespace Oware
 {
-    //Port from javascript to c#
-    //Javascript source: 
-    //https://github.com/shahid28/utm-latlng/blob/master/UTMLatLng.js
+    // Port from javascript to c#
+    // Javascript source: 
+    // https://github.com/shahid28/utm-latlng/blob/master/UTMLatLng.js
+
     public class LatLngUTMConverter
     {
         public class LatLng
@@ -21,15 +22,7 @@ namespace Oware
             public string ZoneLetter { get; set; }
             public string Zone
             {
-                get
-                {
-                    return ZoneNumber + ZoneLetter;
-                }
-            }
-
-            public override string ToString()
-            {
-                return "" + ZoneNumber + ZoneLetter + " " + Easting + "" + Northing;
+                get { return ZoneNumber + ZoneLetter; }
             }
         }
 
@@ -37,6 +30,9 @@ namespace Oware
         private double eccSquared;
         private bool status;
         private string datumName = "WGS 84";
+
+        private const double toRadians = Math.PI / 180.0;
+        private const double toDegrees = 180.0 / Math.PI;
 
         public LatLngUTMConverter(string datumNameIn = "")
         {
@@ -143,11 +139,11 @@ namespace Oware
 
             int ZoneNumber = getUtmZoneNumber(latitude, longitude);
 
-            var LatRad = toRadians(latitude);
-            var LongRad = toRadians(longitude);
+            var LatRad = latitude * toRadians;
+            var LongRad = longitude * toRadians;
 
             var LongOrigin = (ZoneNumber - 1) * 6 - 180 + 3;  //+3 puts origin in middle of zone
-            var LongOriginRad = toRadians(LongOrigin);
+            var LongOriginRad = LongOrigin * toRadians;
 
             var UTMZone = getUtmLetterDesignator(latitude);
 
@@ -313,7 +309,7 @@ namespace Oware
             var phi1Rad = mu + (3 * e1 / 2 - 27 * e1 * e1 * e1 / 32) * Math.Sin(2 * mu)
                     + (21 * e1 * e1 / 16 - 55 * e1 * e1 * e1 * e1 / 32) * Math.Sin(4 * mu)
                     + (151 * e1 * e1 * e1 / 96) * Math.Sin(6 * mu);
-            var phi1 = this.toDegrees(phi1Rad);
+            var phi1 = phi1Rad * toDegrees;
 
             var N1 = this.a / Math.Sqrt(1 - this.eccSquared * Math.Sin(phi1Rad) * Math.Sin(phi1Rad));
             var T1 = Math.Tan(phi1Rad) * Math.Tan(phi1Rad);
@@ -323,22 +319,12 @@ namespace Oware
 
             var Lat = phi1Rad - (N1 * Math.Tan(phi1Rad) / R1) * (D * D / 2 - (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * eccPrimeSquared) * D * D * D * D / 24
                     + (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * eccPrimeSquared - 3 * C1 * C1) * D * D * D * D * D * D / 720);
-            Lat = this.toDegrees(Lat);
+            Lat = Lat * toDegrees;
 
             var Long = (D - (1 + 2 * T1 + C1) * D * D * D / 6 + (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * eccPrimeSquared + 24 * T1 * T1)
                     * D * D * D * D * D / 120) / Math.Cos(phi1Rad);
-            Long = LongOrigin + this.toDegrees(Long);
+            Long = LongOrigin + Long * toDegrees;
             return new LatLng { Lat = Lat, Lng = Long };
-        }
-
-        private double toRadians(double grad)
-        {
-            return grad * Math.PI / 180.0;
-        }
-
-        private double toDegrees(double rad)
-        {
-            return rad * 180.0 / Math.PI;
         }
 
         public double GridConvergence(double latitude, double longitude, int zone)
